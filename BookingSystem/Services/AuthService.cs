@@ -1,6 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using BCrypt.Net;
 using System.Threading.Tasks;
+using BookingSystem.Data;
+using BookingSystem.Models;
+using BookingSystem.Services;
+
+namespace BookingSystem.Services;
 
 public class AuthService
 {
