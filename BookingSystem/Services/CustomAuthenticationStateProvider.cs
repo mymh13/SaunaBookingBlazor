@@ -2,6 +2,9 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.IdentityModel.Tokens.Jwt;
 using Blazored.LocalStorage;
+using BookingSystem.Services;
+
+namespace BookingSystem.Services;
 
 public class CustomAuthenticationStateProvider : AuthenticationStateProvider
 {
