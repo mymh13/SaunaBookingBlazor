@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BookingSystem.Models;
+using BookingSystem.Data;
 
 namespace BookingSystem.Services
 {

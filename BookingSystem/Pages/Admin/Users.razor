@@ -1,0 +1,76 @@
+@page "/admin/users"
+@using System.ComponentModel.DataAnnotations
+@attribute [Authorize(Roles = "Admin")]
+@inject AuthService AuthService
+
+<h3>Create User</h3>
+
+<EditForm Model="@createUserModel" OnValidSubmit="HandleCreateUser">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label for="email">Email:</label>
+        <InputText id="email" @bind-Value="createUserModel.Email" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label for="password">Password:</label>
+        <InputText type="password" id="password" @bind-Value="createUserModel.Password" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>
+            <InputCheckbox @bind-Value="createUserModel.IsAdmin" />
+            Is Admin
+        </label>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Create User</button>
+
+    @if (!string.IsNullOrEmpty(message))
+    {
+        <div class="alert alert-@(isError ? "danger" : "success") mt-3">
+            @message
+        </div>
+    }
+</EditForm>
+
+@code {
+    private CreateUserModel createUserModel = new();
+    private string? message;
+    private bool isError;
+
+    private async Task HandleCreateUser()
+    {
+        var result = await AuthService.CreateUser(
+            createUserModel.Email,
+            createUserModel.Password,
+            createUserModel.IsAdmin);
+
+        if (result)
+        {
+            message = "User created successfully";
+            isError = false;
+            createUserModel = new();
+        }
+        else
+        {
+            message = "Failed to create user. Email might already be in use.";
+            isError = true;
+        }
+    }
+
+    public class CreateUserModel
+    {
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; } = string.Empty;
+
+        [Required]
+        [MinLength(6)]
+        public string Password { get; set; } = string.Empty;
+
+        public bool IsAdmin { get; set; }
+    }
+}

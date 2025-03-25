@@ -1,9 +1,15 @@
 ﻿@page "/"
 
-<PageTitle>Index</PageTitle>
+<PageTitle>Sauna Booking System</PageTitle>
 
-<h1>Hello, world!</h1>
+<h1>Welcome to Sauna Booking</h1>
 
-Welcome to your new app.
-
-<SurveyPrompt Title="How is Blazor working for you?" />
+<AuthorizeView>
+    <Authorized>
+        <p>Welcome, @context.User.Identity?.Name!</p>
+        <p><a href="/calendar">View Calendar</a></p>
+    </Authorized>
+    <NotAuthorized>
+        <p>Please <a href="/login">log in</a> to make a booking.</p>
+    </NotAuthorized>
+</AuthorizeView>

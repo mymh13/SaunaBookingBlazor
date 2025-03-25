@@ -1,6 +1,6 @@
 ﻿@inherits LayoutComponentBase
 
-<PageTitle>BookingSystem</PageTitle>
+<PageTitle>Sauna Booking</PageTitle>
 
 <div class="page">
     <div class="sidebar">
@@ -9,7 +9,11 @@
 
     <main>
         <div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+            <AuthorizeView>
+                <Authorized>
+                    <button class="btn btn-link" @onclick="Logout">Logout</button>
+                </Authorized>
+            </AuthorizeView>
         </div>
 
         <article class="content px-4">
@@ -17,3 +21,14 @@
         </article>
     </main>
 </div>
+
+@code {
+    @inject NavigationManager NavigationManager
+    @inject AuthenticationStateProvider AuthenticationStateProvider
+
+    private async Task Logout()
+    {
+        // We'll implement this later when we add authentication
+        NavigationManager.NavigateTo("/login");
+    }
+}

@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using BookingSystem.Models;
 
+namespace BookingSystem.Data;
+
 public class ApplicationDbContext : DbContext
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
@@ -8,8 +10,8 @@ public class ApplicationDbContext : DbContext
     {
     }
 
-    public DbSet<User> Users { get; set; }
-    public DbSet<Booking> Bookings { get; set; }
+    public DbSet<User> Users { get; set; } = null!;
+    public DbSet<Booking> Bookings { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
