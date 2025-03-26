@@ -1,4 +1,7 @@
 ﻿@inherits LayoutComponentBase
+@using BookingSystem.Services
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthStateProvider
 
 <PageTitle>Sauna Booking</PageTitle>
 
@@ -23,12 +26,10 @@
 </div>
 
 @code {
-    @inject NavigationManager NavigationManager
-    @inject AuthenticationStateProvider AuthenticationStateProvider
-
     private async Task Logout()
     {
-        // We'll implement this later when we add authentication
+        var authStateProvider = (CustomAuthenticationStateProvider)AuthStateProvider;
+        await authStateProvider.MarkUserAsLoggedOut();
         NavigationManager.NavigateTo("/login");
     }
 }
