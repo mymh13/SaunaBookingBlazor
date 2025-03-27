@@ -1,0 +1,48 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Restore dependencies
+      run: dotnet restore
+      working-directory: ./BookingSystem
+
+    - name: Build
+      run: dotnet build --no-restore --configuration Release
+      working-directory: ./BookingSystem
+
+    - name: Test
+      run: dotnet test --no-build --configuration Release
+      working-directory: ./BookingSystem
+      env:
+        JWT_KEY: ${{ secrets.JWT_KEY }}
+        ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
+        ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+
+    # Cache the build output
+    - name: Cache build output
+      uses: actions/cache@v3
+      with:
+        path: ./BookingSystem/bin
+        key: ${{ runner.os }}-build-${{ github.sha }}
+
+  # We can add deployment job later
+  # deploy:
+  #   needs: build-and-test
+  #   runs-on: ubuntu-latest
+  #   if: github.ref == 'refs/heads/main'
