@@ -45,6 +45,9 @@ builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStat
 
 var app = builder.Build();
 
+// Seed the database
+await DatabaseSeeder.SeedData(app.Services);
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
