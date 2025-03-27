@@ -5,6 +5,11 @@
 
 # dotenv files
 .env
+# Secrets
+appsettings.Development.json
+appsettings.json
+BookingSystem/appsettings.Development.json
+BookingSystem/appsettings.json
 
 # User-specific files
 *.rsuser
