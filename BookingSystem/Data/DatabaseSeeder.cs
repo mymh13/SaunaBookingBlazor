@@ -1,7 +1,8 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Threading.Tasks;
+using BookingSystem.Models;
+using BookingSystem.Models.Configuration;
 
 namespace BookingSystem.Data
 {
