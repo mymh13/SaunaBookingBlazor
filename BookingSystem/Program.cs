@@ -43,6 +43,31 @@ builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddAuthenticationCore();
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
 
+// Configuration
+if (builder.Environment.IsDevelopment())
+{
+    builder.Configuration.AddUserSecrets<Program>();
+}
+else
+{
+    // Add environment variables in production
+    builder.Configuration.AddEnvironmentVariables();
+    
+    // Override with GitHub Actions secrets if present
+    if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("JWT_KEY")))
+    {
+        builder.Configuration["Jwt:Key"] = Environment.GetEnvironmentVariable("JWT_KEY");
+    }
+    if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("ADMIN_EMAIL")))
+    {
+        builder.Configuration["AdminUser:Email"] = Environment.GetEnvironmentVariable("ADMIN_EMAIL");
+    }
+    if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("ADMIN_PASSWORD")))
+    {
+        builder.Configuration["AdminUser:Password"] = Environment.GetEnvironmentVariable("ADMIN_PASSWORD");
+    }
+}
+
 var app = builder.Build();
 
 // Seed the database
