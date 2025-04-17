@@ -91,4 +91,19 @@ app.UseRouting();
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
 
+if (app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+    // Configure HTTPS port
+    app.UseHsts();
+}
+
+var httpsPort = builder.Configuration["HttpsPort"] ?? "7234"; // Default port if not configured
+app.Use(async (context, next) =>
+{
+    context.Request.Scheme = "https";
+    context.Request.Host = new HostString(context.Request.Host.Host, int.Parse(httpsPort));
+    await next();
+});
+
 app.Run();

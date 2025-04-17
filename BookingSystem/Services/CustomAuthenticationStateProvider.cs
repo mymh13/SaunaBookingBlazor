@@ -21,25 +21,33 @@ public class CustomAuthenticationStateProvider : AuthenticationStateProvider
 
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
     {
-        var token = await _localStorage.GetItemAsync<string>("authToken");
-
-        if (string.IsNullOrWhiteSpace(token))
-            return _anonymous;
-
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var jwtToken = tokenHandler.ReadJwtToken(token);
-
-        if (jwtToken.ValidTo < DateTime.UtcNow)
+        try
         {
-            await _localStorage.RemoveItemAsync("authToken");
+            var token = await _localStorage.GetItemAsync<string>("authToken");
+
+            if (string.IsNullOrWhiteSpace(token))
+                return _anonymous;
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var jwtToken = tokenHandler.ReadJwtToken(token);
+
+            if (jwtToken.ValidTo < DateTime.UtcNow)
+            {
+                await _localStorage.RemoveItemAsync("authToken");
+                return _anonymous;
+            }
+
+            var claims = jwtToken.Claims;
+            var identity = new ClaimsIdentity(claims, "jwt");
+            var user = new ClaimsPrincipal(identity);
+            
+            return new AuthenticationState(user);
+        }
+        catch
+        {
+            // During prerendering, return anonymous user
             return _anonymous;
         }
-
-        var claims = jwtToken.Claims;
-        var identity = new ClaimsIdentity(claims, "jwt");
-        var user = new ClaimsPrincipal(identity);
-        
-        return new AuthenticationState(user);
     }
 
     public async Task MarkUserAsAuthenticated(string token)
